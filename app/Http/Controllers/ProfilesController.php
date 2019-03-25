@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Session;
-use App\Category;
 use Illuminate\Http\Request;
+use Auth;
+use validator;
+use Session;
 
-class CategoriesController extends Controller
+class ProfilesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +17,7 @@ class CategoriesController extends Controller
     public function index()
     {
         //
-        return view('admin.categories.index')->with('categories',Category::all());
+        return view('admin.users.profile')->with('user',Auth::user());
     }
 
     /**
@@ -27,7 +28,6 @@ class CategoriesController extends Controller
     public function create()
     {
         //
-        return view('admin.categories.create');
     }
 
     /**
@@ -39,16 +39,6 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
         //
-        $this->validate($request,[
-            'name' => 'required'
-        ]);
-
-
-        $category = new Category;
-        $category->name = $request->name;
-        $category->save();
-        Session::flash('success','you successfully created a category.');
-        return redirect()->route('categories');
     }
 
     /**
@@ -71,9 +61,6 @@ class CategoriesController extends Controller
     public function edit($id)
     {
         //
-        $category = Category::find($id);
-
-        return view('admin.categories.edit')->with('category',$category);
     }
 
     /**
@@ -83,18 +70,37 @@ class CategoriesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         //
-        $category = Category::find($id);
+        $this->validate($request,[
+            'name' => 'required',
+            'email' => 'required|email',
+            'facebook' => 'required|url',
+            'youtube' => 'required|url'
+        ]);
+        $user = Auth::user();
+        if ($request->hasFile('avatar')){
+            $avatar = $request->avatar;
+            $avatar_new_name = time().$avatar->getClientOriginalName();
+            $avatar->move('uploads/avatars',$avatar_new_name);
+            $user->profile->avatar = 'uploads/avatars/' . $avatar_new_name;
+            $user->profile->save();
 
-        $category->name = $request->name;
+            $user->name =$request->name;
+            $user->email = $request->email;
+            $user->profile->facebook = $request->facebook;
+            $user->profile->youtube = $request->youtube;
+            $user->save();
+            $user->profile->save();
+            if ($request->has('password'))
+            {
+                $user->password = bcrypt($request->password);
+            }
+            Session::flash('success','Acount profile updated.');
+            return redirect()->back();
+        }
 
-        $category->save();
-
-        Session::flash('success','you successfully updated a category.');
-
-        return redirect()->route('categories');
     }
 
     /**
@@ -106,17 +112,5 @@ class CategoriesController extends Controller
     public function destroy($id)
     {
         //
-        $category = Category::find($id);
-
-        foreach ($category->posts as $post)
-        {
-            $post->forcedelete();
-        }
-
-        $category->delete();
-
-        Session::flash('success','you successfully deleted the category.');
-
-        return redirect()->route('categories');
     }
 }

@@ -10,7 +10,8 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <!--<script src="{{ asset('js/app.js') }}" defer></script> -->
+
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -41,15 +42,17 @@
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                        </li>
+                        @if (Route::has('register'))
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                             </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
+                        @endif
                         @else
+
+
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
@@ -67,7 +70,7 @@
                                     </form>
                                 </div>
                             </li>
-                        @endguest
+                            @endguest
                     </ul>
                 </div>
             </div>
@@ -84,7 +87,34 @@
                                     <a href=" {{route('home')}} ">Home</a>
                                 </li>
                                 <li class="list-group-item">
-                                    <a href=" {{route('categories')}} ">Category</a>
+                                    <a href=" {{route('categories')}} ">Categories</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="{{ route('tag.create') }}"> Create Tag</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href="{{route('tags')}}">Tags</a>
+                                </li>
+
+                                @if(Auth::user()->admin)
+                                    <li class="list-group-item">
+                                        <a href="{{ route('users') }}">Users</a>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <a href="{{ route('user.create') }}">New User</a>
+                                    </li>
+
+                                @endif
+
+                                <li class="list-group-item">
+                                    <a href="{{ route('user.profile') }}">My Profile</a>
+                                </li>
+
+                                <li class="list-group-item">
+                                    <a href=" {{route('posts')}} ">All Posts</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <a href=" {{ route('posts.trashed') }}">All Posts Trashed</a>
                                 </li>
                                 <li class="list-group-item">
                                     <a href=" {{ route('category.create') }}">Create new Category</a>
@@ -111,7 +141,11 @@
            toastr.success("{{ Session::get('success') }}")
 
        @endif
-    </script>
 
+        @if(Session::has('info'))
+           toastr.info("{{ Session::get('info') }}")
+
+        @endif
+    </script>
 </body>
 </html>

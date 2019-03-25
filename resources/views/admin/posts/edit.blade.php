@@ -7,14 +7,14 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h5>Create new post</h5>
+            <h5>Edit post:{{ $post->title }}</h5>
         </div>
         <div class="panel-body">
-            <form action="{{ route('post.store') }}"  method="post" enctype="multipart/form-data">
+            <form action="{{ route('post.update',['id'=> $post->id]) }}"  method="post" enctype="multipart/form-data">
                 {{ csrf_field() }}
                 <div class="form-group">
                     <label for="title">Title</label>
-                    <input type="text" name="title" class="form-control">
+                    <input type="text" name="title" class="form-control" value="{{ $post->title }}">
                 </div>
                 <div class="form-group">
                     <label for="featured">Featured Image</label>
@@ -24,7 +24,11 @@
                     <label for="category">Select a Category</label>
                     <select name="category_id" id="category" class="form-control">
                         @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            <option value="{{ $category->id }}"
+                            @if($post->category->id == $category->id)
+                                selected
+                            @endif
+                            >{{ $category->name }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -32,18 +36,25 @@
                     <level for="tags">Select Tags</level>
                     @foreach($tags as $tag)
                         <div class="checkbox">
-                            <level><input type="checkbox" name="tags[]" value="{{ $tag->id }}">{{$tag->tag}}</level>
+                            <level><input type="checkbox" name="tags[]" value="{{ $tag->id }}"
+                                @foreach($post->tags as $t)
+                                    @if($tag->id == $t->id)
+                                        checked
+                                    @endif
+
+                                @endforeach
+                                >{{$tag->tag}}</level>
                         </div>
                     @endforeach
                 </div>
                 <div class="form-group">
                     <label for="content">Content</label>
-                    <textarea name="content" id="content" cols="5" rows="5" class="form-control"></textarea>
+                    <textarea name="content" id="content" cols="5" rows="5" class="form-control">{{ $post->content }}</textarea>
                 </div>
                 <div class="form-group">
                     <div class="text-center">
                         <button class="btn btn success btn-primary" type="submit">
-                            Store Post
+                            Update Post
                         </button>
                     </div>
                 </div>
