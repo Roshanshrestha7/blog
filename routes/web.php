@@ -1,12 +1,40 @@
 <?php
+Route::post('/subscribe',function(){
+    $email= request('email');
+    Newsletter::Subscribe($email);
+    Session::flash('subscribed','Successfully Subscribed ');
+    return redirect()->back();
+
+});
 
 Route::get('/test',function (){
     return App\User::find(1)->profile;
 });
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/',[
+    'uses' => 'FrontEndController@index',
+    'as' => 'index'
+] );
+Route::get('/results',function (){
+    $posts = \App\Post::where('title','like', '%' . request('query') . '%')->get();
+    return view('results')->with('posts',$posts)
+                            ->with('title','Search results :' . request('query'))
+                            ->with('setting',\App\Settings::first())
+                            ->with('categories',\App\Category::take(5)->get())
+                            ->with('query',request('query'));
 });
+Route::get('/post/{slug}',[
+    'uses' => 'FrontEndController@singlePost',
+    'as' => 'post.single'
+]);
+Route::get('/category/{id}',[
+    'uses' => 'FrontEndController@category',
+    'as' => 'category.single'
+]);
+Route::get('/tag/{id}',[
+    'uses' => 'FrontEndController@tag',
+    'as' => 'tag.single'
+]);
 
 Auth::routes();
 
@@ -151,6 +179,16 @@ Route::group(['prefix'=>'admin', 'middleware'=>'auth'],function (){
     Route::post('/user/profile/update',[
         'uses' => 'ProfilesController@update',
         'as' => 'user.profile.update'
+    ]);
+
+
+    Route::get('/settings',[
+        'uses' => 'SettingsController@index',
+        'as' => 'settings'
+        ]);
+    Route::post('/settings/update',[
+        'uses' => 'SettingsController@update',
+        'as' => 'settings.update'
     ]);
 
 });

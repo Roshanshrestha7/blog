@@ -20,6 +20,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/toastr.min.css') }}" class="stylesheet">
+    @yield('styles')
 </head>
 <body>
     <div id="app">
@@ -122,6 +123,11 @@
                                 <li class="list-group-item">
                                     <a href="{{ route('post.create') }}">Create new post</a>
                                 </li>
+                                @if(Auth::user()->admin)
+                                    <li class="list-group-item">
+                                        <a href="{{ route('settings') }}">Settings</a>
+                                    </li>
+                                @endif
                             </ul>
                         </div>
                     @endif
@@ -147,5 +153,6 @@
 
         @endif
     </script>
+@yield('scripts')
 </body>
 </html>
