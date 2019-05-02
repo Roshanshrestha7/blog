@@ -50,7 +50,7 @@
                             </div>
 
                             <div class="post__content-info">
-                                {{$post->content}}
+                                {!! $post->content !!}
 
                                 <div class="widget w-tags">
                                     <div class="tags-wrap">

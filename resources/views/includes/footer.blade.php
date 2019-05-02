@@ -9,7 +9,11 @@
                             <span class="short-line"></span>
                             <span class="long-line"></span>
                         </div>
-                        <p class="heading-text">{{ $setting->about }}
+                        <p class="heading-text">Qolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibham
+                            liber tempor cum soluta nobis eleifend option congue nihil uarta decima et quinta.
+                            Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl
+                            ut aliquip ex ea commodo consequat eleifend option nihil. Investigationes demonstraverunt
+                            lectores legere me lius quod ii legunt saepius parum claram.
                         </p>
                     </div>
                 </div>

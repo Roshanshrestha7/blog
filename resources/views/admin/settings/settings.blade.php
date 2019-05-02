@@ -30,7 +30,7 @@
                     <label for="name">Email</label>
                     <input type="text" name="contact_email" class="form-control" value="{{ $settings->contact_email }}">
                 </div>
-                
+
                 <div class="form-group">
                     <div class="text-center">
                         <button class="btn btn-success" type="submit">
